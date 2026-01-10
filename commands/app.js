@@ -11,6 +11,14 @@ const fs = require("fs/promises");
  * Elle permet d’utiliser await au niveau global.
  */
 (async () => {
+  const createFile = async (path) => {
+    await fs.writeFile(path, "test");
+  };
+
+  //commands
+
+  const CREATE_FILE = "create a file";
+
   /**
    * On ouvre le fichier command.txt en mode lecture ("r").
    * Cela retourne un FileHandle (descripteur de fichier).
@@ -49,8 +57,15 @@ const fs = require("fs/promises");
 
     //decoder 01 => meaningful
     //encoder meaningfull => 01
+    const command = buff.toString("utf-8");
 
-    console.log(buff.toString("utf-8"));
+    //create a file:
+    //create a file <path>
+
+    if (command.includes(CREATE_FILE)) {
+      const filePath = command.substring(CREATE_FILE.length + 1);
+      createFile(filePath);
+    }
   });
 
   /**
