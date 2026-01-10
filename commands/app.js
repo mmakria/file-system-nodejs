@@ -45,19 +45,12 @@ const fs = require("fs/promises");
      * On lit le fichier et on remplit le buffer.
      * read retourne un objet avec bytesRead et buffer.
      */
-    const content = await commandFileHandler.read(
-      buff,
-      offset,
-      length,
-      position
-    );
+    await commandFileHandler.read(buff, offset, length, position);
 
-    /**
-     * Affiche l’objet retourné par read.
-     * Pour voir le texte lisible :
-     * console.log(buff.toString("utf-8"))
-     */
-    console.log(content);
+    //decoder 01 => meaningful
+    //encoder meaningfull => 01
+
+    console.log(buff.toString("utf-8"));
   });
 
   /**
