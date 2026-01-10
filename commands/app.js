@@ -17,6 +17,48 @@ const fs = require("fs/promises");
    * Ce descripteur sera utilisé pour lire le fichier.
    */
   const commandFileHandler = await fs.open("./command.txt", "r");
+  commandFileHandler.on("change", async () => {
+    console.log("the file was changed");
+
+    /**
+     * On récupère les informations du fichier (stat).
+     * .size correspond à la taille du fichier en octets.
+     */
+    const size = (await commandFileHandler.stat()).size;
+
+    /**
+     * On crée un buffer de la taille exacte du fichier.
+     * Le buffer va contenir les données lues.
+     */
+    const buff = Buffer.alloc(size);
+
+    /**
+     * offset : position dans le buffer où écrire
+     * position : position dans le fichier où commencer la lecture
+     * length : nombre d’octets à lire
+     */
+    const offset = 0;
+    const position = 0;
+    const length = buff.byteLength;
+
+    /**
+     * On lit le fichier et on remplit le buffer.
+     * read retourne un objet avec bytesRead et buffer.
+     */
+    const content = await commandFileHandler.read(
+      buff,
+      offset,
+      length,
+      position
+    );
+
+    /**
+     * Affiche l’objet retourné par read.
+     * Pour voir le texte lisible :
+     * console.log(buff.toString("utf-8"))
+     */
+    console.log(content);
+  });
 
   /**
    * fs.watch permet d’écouter les changements sur un fichier.
@@ -35,46 +77,7 @@ const fs = require("fs/promises");
      * "change" signifie que le contenu du fichier a été modifié.
      */
     if (event.eventType === "change") {
-      console.log("the file was changed");
-
-      /**
-       * On récupère les informations du fichier (stat).
-       * .size correspond à la taille du fichier en octets.
-       */
-      const size = (await commandFileHandler.stat()).size;
-
-      /**
-       * On crée un buffer de la taille exacte du fichier.
-       * Le buffer va contenir les données lues.
-       */
-      const buff = Buffer.alloc(size);
-
-      /**
-       * offset : position dans le buffer où écrire
-       * position : position dans le fichier où commencer la lecture
-       * length : nombre d’octets à lire
-       */
-      const offset = 0;
-      const position = 0;
-      const length = buff.byteLength;
-
-      /**
-       * On lit le fichier et on remplit le buffer.
-       * read retourne un objet avec bytesRead et buffer.
-       */
-      const content = await commandFileHandler.read(
-        buff,
-        offset,
-        length,
-        position
-      );
-
-      /**
-       * Affiche l’objet retourné par read.
-       * Pour voir le texte lisible :
-       * console.log(buff.toString("utf-8"))
-       */
-      console.log(content);
+      commandFileHandler.emit("change");
     }
   }
 })();
