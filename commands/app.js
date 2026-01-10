@@ -78,3 +78,58 @@ const fs = require("fs/promises");
     }
   }
 })();
+
+/**
+ * ========================= RÉSUMÉ fs / fs-promises / FileHandle =========================
+ *
+ * 1) fs/promises
+ * -----------------------------------------------------------------------------
+ * - fs/promises est l’API moderne de Node.js pour le système de fichiers.
+ * - Toutes les fonctions retournent des PROMESSES (utilisables avec async/await).
+ * - Ces fonctions travaillent directement avec des CHEMINS de fichiers (string).
+ *
+ *   Exemples (PAS de FileHandle) :
+ *     - fs.readFile(path)
+ *     - fs.writeFile(path, data)
+ *     - fs.stat(path)
+ *     - fs.rename(oldPath, newPath)
+ *     - fs.rm(path)
+ *     - fs.watch(path)
+ *
+ *   → Node ouvre le fichier, fait l’action, puis le referme automatiquement.
+ *
+ *
+ * 2) FileHandle
+ * -----------------------------------------------------------------------------
+ * - FileHandle représente un FICHIER OUVERT.
+ * - On obtient un FileHandle UNIQUEMENT avec fs.open().
+ * - Tant que le fichier est ouvert, on travaille dessus via le FileHandle.
+ *
+ *   Exemple :
+ *     const handle = await fs.open("file.txt", "r");
+ *
+ * - Les méthodes du FileHandle :
+ *     - handle.read()
+ *     - handle.write()
+ *     - handle.stat()
+ *     - handle.close()
+ *
+ *   → Ici, c’est le développeur qui gère l’ouverture et la fermeture du fichier.
+ *
+ *
+ * 3) Règles importantes à retenir
+ * -----------------------------------------------------------------------------
+ * - SANS fs.open() → PAS de FileHandle.
+ * - Avec fs.open() → on obtient un FileHandle.
+ * - fs/promises (path) = API simple, automatique (99% des cas).
+ * - FileHandle = API avancée (lecture par buffer, performance, contrôle).
+ *
+ *
+ * 4) async / await (rappel)
+ * -----------------------------------------------------------------------------
+ * - await nécessite une fonction async (ou top-level await).
+ * - async/await n’a RIEN à voir avec FileHandle.
+ * - FileHandle dépend uniquement de fs.open().
+ *
+ * =============================================================================
+ */
