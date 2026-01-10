@@ -12,6 +12,19 @@ const fs = require("fs/promises");
  */
 (async () => {
   const createFile = async (path) => {
+    let existingFileHandle;
+    try {
+      existingFileHandle = await fs.open(path, "r");
+      // on a le fichiers
+      existingFileHandle.close();
+      return console.log(`The file ${path} already exists`);
+    } catch (error) {
+      // on n'a pas le fichiers
+      const newFileHandle = await fs.open(path, "w");
+      console.log("A new file was successfully created");
+      newFileHandle.close();
+    }
+
     await fs.writeFile(path, "test");
   };
 
