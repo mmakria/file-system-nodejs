@@ -11,6 +11,13 @@ const fs = require("fs/promises");
  * Elle permet d’utiliser await au niveau global.
  */
 (async () => {
+  //commands
+
+  const CREATE_FILE = "create a file";
+  const DELETE_FILE = "delete the file";
+  const RENAME_FILE = "rename the file";
+  const ADD_TO_FILE = "add to the file";
+
   const createFile = async (path) => {
     try {
       const existingFileHandle = await fs.open(path, "r");
@@ -25,9 +32,17 @@ const fs = require("fs/promises");
     }
   };
 
-  //commands
+  const deleteFile = async (path) => {
+    console.log(`Deleting ${path}...`);
+  };
+  const renameFile = async (oldPath, newPath) => {
+    console.log(`Renaming ${oldPath} to ${newPath}...`);
+  };
 
-  const CREATE_FILE = "create a file";
+  const addToFile = async (path, content) => {
+    console.log(`Adding to ${path}...`);
+    console.log(`Content:  ${content}`);
+  };
 
   /**
    * On ouvre le fichier command.txt en mode lecture ("r").
@@ -64,17 +79,37 @@ const fs = require("fs/promises");
      * read retourne un objet avec bytesRead et buffer.
      */
     await commandFileHandler.read(buff, offset, length, position);
-
-    //decoder 01 => meaningful
-    //encoder meaningfull => 01
     const command = buff.toString("utf-8");
 
-    //create a file:
-    //create a file <path>
+    // ---------------------------   create a file - ---------------------------------------------
 
     if (command.includes(CREATE_FILE)) {
       const filePath = command.substring(CREATE_FILE.length + 1);
       createFile(filePath);
+    }
+
+    // ---------------------------   delete a file - ---------------------------------------------
+
+    if (command.includes(DELETE_FILE)) {
+      const filePath = command.substring(DELETE_FILE.length + 1);
+      deleteFile(filePath);
+    }
+
+    // ---------------------------   rename a file - ---------------------------------------------
+    if (command.includes(RENAME_FILE)) {
+      const _idx = command.indexOf(" to ");
+      const oldFilePath = command.substring(RENAME_FILE.length + 1, _idx);
+      const newFilePath = command.substring(_idx + 4);
+      renameFile(oldFilePath, newFilePath);
+    }
+
+    // ---------------------------   adding to a file - ---------------------------------------------
+    // add to the file <path> this content: <content>
+    if (command.includes(ADD_TO_FILE)) {
+      const _idx = command.indexOf(" this content: ");
+      const filePath = command.substring(RENAME_FILE.length + 1, _idx);
+      const content = command.substring(_idx + 15);
+      addToFile(filePath, content);
     }
   });
 
