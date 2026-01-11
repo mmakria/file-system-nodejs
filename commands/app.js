@@ -34,6 +34,9 @@ const fs = require("fs/promises");
 
   const deleteFile = async (path) => {
     console.log(`Deleting ${path}...`);
+    try {
+      const existingFileHandle = await fs.open(path, "r");
+    } catch (error) {}
   };
   const renameFile = async (oldPath, newPath) => {
     console.log(`Renaming ${oldPath} to ${newPath}...`);
@@ -41,6 +44,13 @@ const fs = require("fs/promises");
 
   const addToFile = async (path, content) => {
     console.log(`Adding to ${path}...`);
+    try {
+      const existingFileHandle = await fs.open(path, "w");
+      existingFileHandle.appendFile(content);
+      existingFileHandle.close();
+    } catch (error) {
+      console.log("An error happened: " + error);
+    }
     console.log(`Content:  ${content}`);
   };
 
