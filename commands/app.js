@@ -3,7 +3,6 @@
  * Il permet de travailler avec le système de fichiers
  * en utilisant des promesses (async/await).
  */
-const { unlink } = require("fs");
 const fs = require("fs/promises");
 
 /**
@@ -34,12 +33,16 @@ const fs = require("fs/promises");
   };
 
   const deleteFile = async (path) => {
-    console.log(`Deleting ${path}...`);
     try {
-      // const existingFileHandle = await fs.open(path, "r");
       await fs.unlink(path);
+      console.log(`Deleting ${path}...`);
     } catch (error) {
-      console.log(error);
+      if (error.code === "ENOENT") {
+        console.log("No file at this path to remove");
+      } else {
+        console.log("An error occured while removing the file: ");
+        console.log(error);
+      }
     }
   };
   const renameFile = async (oldPath, newPath) => {

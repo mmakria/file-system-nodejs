@@ -1,1 +1,1 @@
-delete the file fe.txt
+delete the file text.txt
