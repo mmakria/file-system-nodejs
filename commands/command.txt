@@ -1,1 +1,1 @@
-delete the file text.txt
+rename the file text.txt to hello.txt

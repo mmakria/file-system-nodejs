@@ -35,7 +35,7 @@ const fs = require("fs/promises");
   const deleteFile = async (path) => {
     try {
       await fs.unlink(path);
-      console.log(`Deleting ${path}...`);
+      console.log(`The file ${path} was removed`);
     } catch (error) {
       if (error.code === "ENOENT") {
         console.log("No file at this path to remove");
@@ -47,6 +47,20 @@ const fs = require("fs/promises");
   };
   const renameFile = async (oldPath, newPath) => {
     console.log(`Renaming ${oldPath} to ${newPath}...`);
+
+    try {
+      await fs.rename(oldPath, newPath);
+      console.log(`The file ${oldPath} was renamed`);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        console.log(
+          "No file at this path to rename, or the destination doesn't exist",
+        );
+      } else {
+        console.log("An error occured while removing the file: ");
+        console.log(error);
+      }
+    }
   };
 
   const addToFile = async (path, content) => {
@@ -68,7 +82,7 @@ const fs = require("fs/promises");
    */
   const commandFileHandler = await fs.open("./command.txt", "r");
   commandFileHandler.on("change", async () => {
-    console.log("the file was changed");
+    // console.log("the file was changed");
 
     /**
      * On récupère les informations du fichier (stat).
