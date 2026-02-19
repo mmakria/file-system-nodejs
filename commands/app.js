@@ -63,11 +63,16 @@ const fs = require("fs/promises");
     }
   };
 
+  let addedContent;
+
   const addToFile = async (path, content) => {
+    if (addedContent === content) return; // permet d'eviter l'erreur du doublons
     console.log(`Adding to ${path}...`);
+
     try {
-      const existingFileHandle = await fs.open(path, "w");
-      existingFileHandle.appendFile(content);
+      const existingFileHandle = await fs.open(path, "a");
+      existingFileHandle.write(content);
+      addedContent = content;
       existingFileHandle.close();
     } catch (error) {
       console.log("An error happened: " + error);

@@ -1,1 +1,1 @@
-rename the file text.txt to hello.txt
+add to the file test.txt this content: et j'ai faim
